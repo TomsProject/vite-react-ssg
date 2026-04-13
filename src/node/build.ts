@@ -32,9 +32,11 @@ import { getAdapter } from './router-adapter'
 import { buildLog, getSize, resolveAlias, routesToPaths } from './utils'
 
 const dotVitedir = Number.parseInt(viteVersion) >= 5 ? ['.vite'] : []
-const buildBundlerOptions = <T extends Record<string, unknown>>(options: T) => (
-  viteVersion >= 8 ? { rolldownOptions: options } : { rollupOptions: options }
-)
+function buildBundlerOptions<T extends Record<string, unknown>>(options: T) {
+  return Number.parseInt(viteVersion) >= 8
+    ? { rolldownOptions: options }
+    : { rollupOptions: options };
+}
 export type SSRManifest = Record<string, string[]>
 export interface ManifestItem {
   css?: string[]

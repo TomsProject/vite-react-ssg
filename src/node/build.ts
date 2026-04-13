@@ -32,6 +32,9 @@ import { getAdapter } from './router-adapter'
 import { buildLog, getSize, resolveAlias, routesToPaths } from './utils'
 
 const dotVitedir = Number.parseInt(viteVersion) >= 5 ? ['.vite'] : []
+const buildBundlerOptions = <T extends Record<string, unknown>>(options: T) => (
+  viteVersion >= 8 ? { rolldownOptions: options } : { rollupOptions: options }
+)
 export type SSRManifest = Record<string, string[]>
 export interface ManifestItem {
   css?: string[]
@@ -131,7 +134,7 @@ export async function build(
       build: {
         manifest: true,
         ssrManifest: true,
-        rollupOptions: {
+        ...buildBundlerOptions({
           input: {
             app: join(root, htmlEntry || './index.html'),
           },
@@ -141,7 +144,7 @@ export async function build(
               return
             handler(level, log)
           },
-        },
+        }),
       },
       customLogger: clientLogger,
       mode: config.mode,
@@ -176,7 +179,7 @@ export async function build(
         outDir: ssgOut,
         minify: false,
         cssCodeSplit: false,
-        rollupOptions: {
+        ...buildBundlerOptions({
           output:
             format === 'esm'
               ? {
@@ -193,7 +196,7 @@ export async function build(
               return
             handler(level, log)
           },
-        },
+        }),
       },
       mode: config.mode,
     }),

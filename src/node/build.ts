@@ -35,7 +35,7 @@ const dotVitedir = Number.parseInt(viteVersion) >= 5 ? ['.vite'] : []
 function buildBundlerOptions<T extends Record<string, unknown>>(options: T) {
   return Number.parseInt(viteVersion) >= 8
     ? { rolldownOptions: options }
-    : { rollupOptions: options };
+    : { rollupOptions: options }
 }
 export type SSRManifest = Record<string, string[]>
 export interface ManifestItem {
